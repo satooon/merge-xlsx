@@ -1,0 +1,12 @@
+language: go
+go:
+  - tip
+before_install:
+  - go get github.com/axw/gocov/gocov
+  - go get github.com/mattn/goveralls
+  - if ! go get code.google.com/p/go.tools/cmd/cover; then go get golang.org/x/tools/cmd/cover; fi
+script:
+  - $HOME/gopath/bin/goveralls -repotoken $COVERALLS_TOKEN
+env:
+  global:
+    secure: shMEkfipdp+o9o7IwtxXzRiT+q8Vvm+96WQBPEQlFnRBqwN7T2DeyMUlxalivawLEBX6DXhXYSs4DM4q/DVnLIn9kd6rQxgUPqXtpcCWeZ+JyX74rNzTAyjUMyOOwYSYWVu/dPidWarW+UpDKRLh4wi1eklG6UJbOyxw17JUsIAWzbwGBzVFs/2LiqoM2zYp8/hQSAOjglM4JqZY3DNdddCAyYyiU6Ei2HqH7iLi3yKNhyyNxyYJyyZCXN9eUU3UM5RQCJgYSo9ScA/BT5V3zLnZgrr5azNgdPJRGgephPyPMIypy5/zQgzXa9S0hiHg4pdY4YAHMNx+WaO/r+bsmFictVG1sl6LIVhWmnHoQ7/9AIc7tKVxZHOIrGbME4sgwN1QEYV+PxPOMHyI/TjBlxfjUslJ7v8ehyS1FKxpJ8nRjFDkj0AuVZRxYAWLsg/Q81zwDP4NXx5sx0G2pzg6IuU0xyk5+eFzQxdVFkIhdDk+v6cAu/bF2TZ97mtwfZco0m7L1mOIMFpf7Z22y7klVqMfAAtLuHjpxruM8HzjOdLsX/TjhG6WhdNIjFYviuCVYaMIYcyi3MlZknqurGgBx1TTHFccSGo0sSA3wgOOA/R4K6E9ElSaK/gYb4ksV6GFdKLL2ucrN/N/4iItNYh714qe3qA+as+7EzhwRk/obUY=
