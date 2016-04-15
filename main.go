@@ -95,8 +95,13 @@ func Action(ctx *cli.Context) {
 					if number, err := cell.Int64(); err == nil {
 						cells = append(cells, fmt.Sprintf("%d", number))
 					} else {
+						str, err := cell.String()
+						if err != nil {
+							panic(err)
+						}
+						str = strings.Replace(str, "\\", "", -1)
 						reg := regexp.MustCompile("\n")
-						str := reg.ReplaceAllString(cell.Value, "\\n")
+						str = reg.ReplaceAllString(str, "\\n")
 						cells = append(cells, fmt.Sprintf("\"%s\"", str))
 					}
 				}
