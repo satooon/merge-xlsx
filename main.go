@@ -67,30 +67,46 @@ func Action(ctx *cli.Context) {
 			sheetName := strings.Replace(sheet.Name, csvMarker, "", 1)
 			if _, ok := csvMap[sheetName]; ok == false {
 				csvMap[sheetName] = ""
+			} else {
+				csvMap[sheetName] += "\n"
 			}
-			rows := make([]string, len(sheet.Rows))
+			rows := []string{}
 			for i, row := range sheet.Rows {
 				if i <= 0 && csvMap[sheetName] != "" {
 					continue
 				}
-				cells := make([]string, len(row.Cells))
+				cells := []string{}
 				for j, cell := range row.Cells {
 					if err != nil {
 						panic(err)
 					}
 					if i <= 0 {
-						cells[j] = cell.Value
+						cells = append(cells, cell.Value)
 						continue
 					}
-					if number, err := cell.Int(); err == nil {
-						cells[j] = fmt.Sprintf("%d", number)
+					if j <= 0 {
+						if str, err := cell.String(); err == nil && str == "" {
+							break
+						}
+						if number, err := cell.Int64(); err == nil && number <= 0 {
+							break
+						}
+					}
+					if number, err := cell.Int64(); err == nil {
+						cells = append(cells, fmt.Sprintf("%d", number))
 					} else {
 						reg := regexp.MustCompile("\n")
 						str := reg.ReplaceAllString(cell.Value, "\\n")
-						cells[j] = fmt.Sprintf("\"%s\"", str)
+						cells = append(cells, fmt.Sprintf("\"%s\"", str))
 					}
 				}
-				rows[i] = strings.Join(cells, ",")
+				if len(cells) <= 0 {
+					continue
+				}
+				rows = append(rows, strings.Join(cells, ","))
+			}
+			if len(rows) <= 0 {
+				continue
 			}
 			csvMap[sheetName] += strings.Join(rows, "\n")
 		}
