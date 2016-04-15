@@ -50,6 +50,7 @@ func Action(ctx *cli.Context) {
 	if err != nil {
 		panic(err)
 	}
+	debugLog.Println("fileNames", fileNames)
 
 	reg := regexp.MustCompile(csvMarker)
 	csvMap := map[string]string{}
@@ -111,10 +112,9 @@ func Action(ctx *cli.Context) {
 	for i, v := range csvMap {
 		wg.Add(1)
 		go func(dirName, sheetName, csv string) {
-			log.Println("hogehhgoe")
 			filePath := fmt.Sprintf("%s/%s.csv", dirName, sheetName)
 			debugLog.Println("filePath", filePath)
-			log.Println("err", ioutil.WriteFile(filePath, []byte(csv), os.ModePerm))
+			debugLog.Println("writer", ioutil.WriteFile(filePath, []byte(csv), os.ModePerm))
 			wg.Done()
 		}(currentDirName+"/csv", i, v)
 	}
@@ -137,7 +137,7 @@ func getFiles(args cli.Args) (fileNames []string, err error) {
 		if err != nil {
 			return fileNames, err
 		}
-		reg := regexp.MustCompile("xlsx$")
+		reg := regexp.MustCompile(`\.xlsx$`)
 		for _, v := range fileInfos {
 			if v.IsDir() {
 				continue
